@@ -17,6 +17,7 @@ const fetchcountries = async () => {
   try {
     const { data } = await axiosClient.get("/all");
     countries.value = data;
+    totalItems.value=countries.value.length
   } catch (error) {
     console.log(error);
   }
@@ -36,12 +37,20 @@ const sliceCountries = (currentCountries: Country[]) => {
   paginatedCountries.value = currentCountries.slice(start, end);
 };
 
+const changePage = (newPage:number) =>{
+  page.value=newPage;
+}
+
 onMounted(() => {
   fetchcountries();
 });
 
-watch([countries], () => {
-  sliceCountries(countries.value);
+watch([countries,page,filteredCountries], () => {
+  sliceCountries(
+    filteredCountries.value.length <=0 
+    ?countries.value
+    :filteredCountries.value
+    );
 });
 </script>
 
@@ -59,10 +68,16 @@ watch([countries], () => {
     </div>
     <div class="flex justify-center mb-8 space-x-6">
       <button
+        :disabled="page <= 1"
+        :class="{'opacity-20':page<=1}"
+        @click="changePage(page-1)"
         class="px-2 border border-gray-300 rounded py-0.5 hover:bg-gray-200">
         previous
       </button>
       <button
+        :disabled="page >= totalItems/itemsPerPage"
+        :class="{'opacity-20':page>= totalItems/itemsPerPage}"
+        @click="changePage(page+1)"
         class="px-2 border border-gray-300 rounded py-0.5 hover:bg-gray-200">
         next
       </button>

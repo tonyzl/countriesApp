@@ -11,7 +11,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 ">
     <div
       v-for="country in countries"
       class="p-3 border border-gray-300 rounded">
